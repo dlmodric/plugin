@@ -14,3 +14,5 @@ public:
 
 // 方案2：注册到ClassFactory
 REGISTER_CLASS(MyPluginA)
+
+EXPORT_CLASS_FACTORY()

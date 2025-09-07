@@ -109,5 +109,3 @@ private:
             return &ClassFactory::getInstance(); \
         } \
     }
-
-EXPORT_CLASS_FACTORY()
