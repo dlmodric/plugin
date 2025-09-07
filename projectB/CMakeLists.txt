@@ -11,4 +11,9 @@ include_directories(../projectA/include)
 add_library(testB SHARED MyPluginA.cpp MyPluginA.h MyPluginB.cpp MyPluginB.h)
 
 # 设置输出名称
-set_target_properties(testB PROPERTIES OUTPUT_NAME "testB")
+set_target_properties(testB PROPERTIES 
+    OUTPUT_NAME "testB"
+    # 确保符号可见性
+    CXX_VISIBILITY_PRESET default
+    VISIBILITY_INLINES_HIDDEN OFF
+)

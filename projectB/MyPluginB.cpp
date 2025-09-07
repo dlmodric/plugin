@@ -1,4 +1,6 @@
 #include "MyPluginB.h"
+#include "MyPluginA.h"
+#include "../projectA/include/class_factory.h"
 #include <iostream>
 
 void MyPluginB::execute() {

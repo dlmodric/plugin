@@ -1,5 +1,4 @@
 #include <iostream>
-#include <dlfcn.h>
 #include <memory>
 #include "include/IPlugin.h"
 #include "include/class_factory.h"
@@ -7,38 +6,16 @@
 int main()
 {
 
-    std::cout << "=== 动态插件加载测试（ClassFactory方案） ===" << std::endl;
+    std::cout << "=== 动态插件加载测试（CMake链接方案） ===" << std::endl;
     
-    // 加载动态库
-    const char* libPath = "libtestB.dylib";
-    void* handle = dlopen(libPath, RTLD_LAZY);
-    
-    if (!handle) {
-        std::cerr << "无法加载动态库: " << dlerror() << std::endl;
-        std::cout << "请先编译 projectB 生成动态库" << std::endl;
-        return 1;
-    }
-    
-    std::cout << "✅ 成功加载动态库: " << libPath << std::endl;
-    
-    // 获取ClassFactory实例
-    typedef ClassFactory* (*GetClassFactoryFunc)();
-    GetClassFactoryFunc getClassFactory = (GetClassFactoryFunc) dlsym(handle, "getClassFactory");
-    
-    if (!getClassFactory) {
-        std::cerr << "无法找到getClassFactory函数: " << dlerror() << std::endl;
-        dlclose(handle);
-        return 1;
-    }
-    
-    ClassFactory* factory = getClassFactory();
+    // 直接使用ClassFactory单例，通过链接的动态库自动初始化
+    ClassFactory* factory = &ClassFactory::getInstance();
     if (!factory) {
         std::cerr << "❌ 获取ClassFactory实例失败" << std::endl;
-        dlclose(handle);
         return 1;
     }
     
-    std::cout << "✅ 成功获取ClassFactory实例" << std::endl;
+    std::cout << "✅ 成功获取ClassFactory实例（通过CMake链接）" << std::endl;
     
     // 显示已注册的类
     auto registeredClasses = factory->getRegisteredClasses();
@@ -77,8 +54,7 @@ int main()
         std::cout << "❌ 插件 " << pluginName << " 未注册" << std::endl;
     }
     
-    // 清理
-    dlclose(handle);
+    // 无需手动清理，动态库会在程序结束时自动卸载
     std::cout << "=== 测试完成 ===" << std::endl;
     
     return 0;

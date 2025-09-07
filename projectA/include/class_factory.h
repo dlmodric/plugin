@@ -98,14 +98,3 @@ private:
  */
 #define REGISTER_CLASS(className) \
     static ClassRegisterHelper<className> reg_##className(#className);
-
-/**
- * 导出ClassFactory实例的宏
- * 用于从动态库中获取ClassFactory
- */
-#define EXPORT_CLASS_FACTORY() \
-    extern "C" { \
-        ClassFactory* getClassFactory() { \
-            return &ClassFactory::getInstance(); \
-        } \
-    }

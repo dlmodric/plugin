@@ -12,5 +12,7 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++")
 add_executable(plugin_test main.cpp)
 target_include_directories(plugin_test PRIVATE include)
 
-# 链接必要的库
-target_link_libraries(plugin_test PRIVATE ${CMAKE_DL_LIBS} c++ c++abi)
+# 直接链接动态库（简化版本）
+find_library(TESTB_LIBRARY testB PATHS ../projectB/build NO_DEFAULT_PATH REQUIRED)
+target_link_libraries(plugin_test PRIVATE ${TESTB_LIBRARY})
+set_target_properties(plugin_test PROPERTIES BUILD_RPATH "../projectB/build")
