@@ -36,14 +36,11 @@ target_include_directories(plugin_test PRIVATE ${INCLUDE_DIR})
 if(UNIX AND NOT APPLE)
     # 先添加链接器标志
     target_link_options(plugin_test PRIVATE -Wl,--no-as-needed)
-    # 然后链接库
-    target_link_libraries(plugin_test PRIVATE -Wl,--whole-archive ${TESTB_LIBRARY} -Wl,--no-whole-archive)
 else()
     # 设置编译器和链接器标志
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++")
     # macOS 和其他平台使用正常链接
-    target_link_libraries(plugin_test PRIVATE ${TESTB_LIBRARY})
 endif()
 
 
