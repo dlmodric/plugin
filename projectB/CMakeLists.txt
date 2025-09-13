@@ -4,6 +4,14 @@ project(testB)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# 设置输出路径为build目录
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
+
+# 打印输出目录信息
+message(STATUS "输出目录: ${CMAKE_CURRENT_SOURCE_DIR}/build")
+
 # 包含头文件路径
 include_directories(../projectA/include)
 
@@ -19,7 +27,7 @@ set_target_properties(testB PROPERTIES
 )
 
 # 链接projectA的动态库以解决ClassFactory符号未定义问题
-find_library(PLUGINA_LIBRARY pluginA PATHS ../projectA/cmake-build-debug NO_DEFAULT_PATH)
+find_library(PLUGINA_LIBRARY pluginA PATHS ../projectA/build NO_DEFAULT_PATH)
 if(PLUGINA_LIBRARY)
     target_link_libraries(testB PRIVATE ${PLUGINA_LIBRARY})
     message(STATUS "找到并链接projectA库: ${PLUGINA_LIBRARY}")

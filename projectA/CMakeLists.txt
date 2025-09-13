@@ -23,10 +23,15 @@ message(STATUS "==================")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# 设置输出路径为build目录
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
+
 # 打印编译标准信息
 message(STATUS "C++标准: ${CMAKE_CXX_STANDARD}")
 message(STATUS "C++标准要求: ${CMAKE_CXX_STANDARD_REQUIRED}")
-
+message(STATUS "输出目录: ${CMAKE_CURRENT_SOURCE_DIR}/build")
 
 # 构建动态链接库
 add_library(pluginA SHARED PluginManager.cpp src/class_factory.cpp)
@@ -44,20 +49,10 @@ else()
     # macOS 和其他平台使用正常链接
 endif()
 
-# 构建测试程序（可选，用于测试）
-add_executable(plugin_test main.cpp)
-target_include_directories(plugin_test PRIVATE ${INCLUDE_DIR})
-
 # 打印构建信息
 message(STATUS "=== 构建配置 ===")
 message(STATUS "动态库: pluginA")
-message(STATUS "测试程序: plugin_test")
-message(STATUS "源文件: PluginManager.cpp, main.cpp")
+message(STATUS "源文件: PluginManager.cpp, src/class_factory.cpp")
 message(STATUS "头文件目录: ${INCLUDE_DIR}")
-
-# 链接到测试程序（只链接自己的库）
-target_link_libraries(plugin_test PRIVATE pluginA)
-
-# 打印最终配置
-message(STATUS "构建完成: pluginA 动态库和 plugin_test 测试程序")
+message(STATUS "构建完成: pluginA 动态库")
 message(STATUS "===============")

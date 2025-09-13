@@ -12,17 +12,7 @@ echo "=== 开始构建所有项目 ==="
 echo "清理之前的构建..."
 rm -rf projectA/build projectB/build projectX/build
 
-# 1. 首先构建 projectB (插件库)
-echo "=== 构建 ProjectB ==="
-cd projectB
-mkdir -p build
-cd build
-cmake ..
-make -j$(nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)
-echo "✅ ProjectB 构建完成"
-cd ../..
-
-# 2. 然后构建 projectA (插件管理器库)
+# 1. 首先构建 projectA (插件管理器库)
 echo "=== 构建 ProjectA ==="
 cd projectA
 mkdir -p build
@@ -30,6 +20,17 @@ cd build
 cmake ..
 make -j$(nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)
 echo "✅ ProjectA 构建完成"
+cd ../..
+
+
+# 2. 然后构建 projectB (插件库)
+echo "=== 构建 ProjectB ==="
+cd projectB
+mkdir -p build
+cd build
+cmake ..
+make -j$(nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)
+echo "✅ ProjectB 构建完成"
 cd ../..
 
 # 3. 最后构建 projectX (主程序)
@@ -45,7 +46,6 @@ cd ../..
 echo "=== 所有项目构建完成 ==="
 echo ""
 echo "运行方式："
-echo "1. 运行 ProjectA 测试程序: ./projectA/build/plugin_test"
-echo "2. 运行 ProjectX 主程序: ./projectX/build/projectX"
+echo "运行 ProjectX 主程序: ./projectX/build/projectX"
 echo ""
 echo "注意：ProjectX 通过动态库调用 ProjectA 的功能"

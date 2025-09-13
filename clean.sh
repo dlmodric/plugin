@@ -29,9 +29,16 @@ find . -name "CMakeFiles" -type d -exec rm -rf {} + 2>/dev/null
 
 # 清理构建目录
 echo "清理构建目录..."
+# 清理根目录的构建目录
 rm -rf build/ 2>/dev/null
 rm -rf cmake-build-debug/ 2>/dev/null
 rm -rf cmake-build-release/ 2>/dev/null
+
+# 清理所有子项目的构建目录
+echo "清理子项目构建目录..."
+find . -name "build" -type d -exec rm -rf {} + 2>/dev/null
+find . -name "cmake-build-debug" -type d -exec rm -rf {} + 2>/dev/null
+find . -name "cmake-build-release" -type d -exec rm -rf {} + 2>/dev/null
 
 # 清理临时文件
 echo "清理临时文件..."
