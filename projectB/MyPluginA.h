@@ -9,7 +9,7 @@
 class MyPluginA : public IPlugin {
 public:
     MyPluginA() = default;
-    void execute() override;
+    void execute(const NodeConfig& config) override;  // 修改函数签名
 };
 
 // 方案2：注册到ClassFactory

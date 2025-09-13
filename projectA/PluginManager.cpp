@@ -18,7 +18,7 @@ bool PluginManager::initialize() {
     return true;
 }
 
-bool PluginManager::executePlugin(const std::string& pluginName) {
+bool PluginManager::executePlugin(const std::string& pluginName, const NodeConfig& config) {
     if (!initialized_) {
         std::cerr << "❌ PluginManager未初始化" << std::endl;
         return false;
@@ -30,7 +30,7 @@ bool PluginManager::executePlugin(const std::string& pluginName) {
         auto plugin = factory_->createObject(pluginName);
         if (plugin) {
             std::cout << "✅ 成功创建插件实例" << std::endl;
-            plugin->execute();
+            plugin->execute(config);  // 传递NodeConfig参数
             return true;
         } else {
             std::cout << "❌ 创建插件实例失败" << std::endl;
@@ -42,7 +42,19 @@ bool PluginManager::executePlugin(const std::string& pluginName) {
     }
 }
 
-int PluginManager::executeAllPlugins() {
+// 向后兼容的无参数版本
+bool PluginManager::executePlugin(const std::string& pluginName) {
+    // 创建一个默认的NodeConfig
+    NodeConfig defaultConfig;
+    defaultConfig.id = "default";
+    defaultConfig.name = "Default Config";
+    defaultConfig.type = NodeType::PROCESS;
+    defaultConfig.description = "Default configuration for backward compatibility";
+    
+    return executePlugin(pluginName, defaultConfig);
+}
+
+int PluginManager::executeAllPlugins(const NodeConfig& config) {
     if (!initialized_) {
         std::cerr << "❌ PluginManager未初始化" << std::endl;
         return 0;
@@ -52,12 +64,24 @@ int PluginManager::executeAllPlugins() {
     int successCount = 0;
     
     for (const auto& className : registeredClasses) {
-        if (executePlugin(className)) {
+        if (executePlugin(className, config)) {
             successCount++;
         }
     }
     
     return successCount;
+}
+
+// 向后兼容的无参数版本
+int PluginManager::executeAllPlugins() {
+    // 创建一个默认的NodeConfig
+    NodeConfig defaultConfig;
+    defaultConfig.id = "default";
+    defaultConfig.name = "Default Config";
+    defaultConfig.type = NodeType::PROCESS;
+    defaultConfig.description = "Default configuration for backward compatibility";
+    
+    return executeAllPlugins(defaultConfig);
 }
 
 size_t PluginManager::getPluginCount() const {

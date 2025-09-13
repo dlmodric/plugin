@@ -11,10 +11,7 @@
  */
 class ClassFactory {
 public:
-    static ClassFactory& getInstance() {
-        static ClassFactory instance;
-        return instance;
-    }
+    static ClassFactory& getInstance();
 
     using CreateFunc = IPlugin*(*)();
     
@@ -23,51 +20,33 @@ public:
      * @param className 类名
      * @param creator 创建函数
      */
-    void registerClass(const std::string& className, CreateFunc creator) {
-        registry[className] = creator;
-    }
+    void registerClass(const std::string& className, CreateFunc creator);
 
     /**
      * 创建对象实例
      * @param className 类名
      * @return 对象智能指针，失败返回nullptr
      */
-    std::unique_ptr<IPlugin> createObject(const std::string& className) {
-        auto it = registry.find(className);
-        if (it != registry.end()) {
-            return std::unique_ptr<IPlugin>(it->second());
-        }
-        return nullptr;
-    }
+    std::unique_ptr<IPlugin> createObject(const std::string& className);
 
     /**
      * 检查类是否已注册
      * @param className 类名
      * @return 是否已注册
      */
-    bool isRegistered(const std::string& className) const {
-        return registry.find(className) != registry.end();
-    }
+    bool isRegistered(const std::string& className) const;
 
     /**
      * 获取已注册类的数量
      * @return 注册类数量
      */
-    size_t getRegisteredCount() const {
-        return registry.size();
-    }
+    size_t getRegisteredCount() const;
 
     /**
      * 获取所有已注册的类名
      * @return 类名列表
      */
-    std::vector<std::string> getRegisteredClasses() const {
-        std::vector<std::string> classes;
-        for (const auto& pair : registry) {
-            classes.push_back(pair.first);
-        }
-        return classes;
-    }
+    std::vector<std::string> getRegisteredClasses() const;
 
 private:
     ClassFactory() = default;

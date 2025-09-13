@@ -17,3 +17,12 @@ set_target_properties(testB PROPERTIES
     CXX_VISIBILITY_PRESET default
     VISIBILITY_INLINES_HIDDEN OFF
 )
+
+# 链接projectA的动态库以解决ClassFactory符号未定义问题
+find_library(PLUGINA_LIBRARY pluginA PATHS ../projectA/cmake-build-debug NO_DEFAULT_PATH)
+if(PLUGINA_LIBRARY)
+    target_link_libraries(testB PRIVATE ${PLUGINA_LIBRARY})
+    message(STATUS "找到并链接projectA库: ${PLUGINA_LIBRARY}")
+else()
+    message(WARNING "未找到projectA库，请先构建projectA")
+endif()

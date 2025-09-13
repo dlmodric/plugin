@@ -29,7 +29,7 @@ message(STATUS "C++标准要求: ${CMAKE_CXX_STANDARD_REQUIRED}")
 
 
 # 构建动态链接库
-add_library(pluginA SHARED PluginManager.cpp)
+add_library(pluginA SHARED PluginManager.cpp src/class_factory.cpp)
 target_include_directories(pluginA PRIVATE ${INCLUDE_DIR})
 target_include_directories(pluginA PUBLIC ${INCLUDE_DIR})
 
@@ -55,19 +55,9 @@ message(STATUS "测试程序: plugin_test")
 message(STATUS "源文件: PluginManager.cpp, main.cpp")
 message(STATUS "头文件目录: ${INCLUDE_DIR}")
 
-# 直接链接动态库（使用变量）
-find_library(TESTB_LIBRARY testB PATHS ${PLUGIN_DIR} NO_DEFAULT_PATH REQUIRED)
-message(STATUS "找到动态库: ${TESTB_LIBRARY}")
-
-# 链接到动态库
-target_link_libraries(pluginA PRIVATE ${TESTB_LIBRARY})
-set_target_properties(pluginA PROPERTIES BUILD_RPATH "${PLUGIN_DIR}")
-
-# 链接到测试程序
-target_link_libraries(plugin_test PRIVATE pluginA ${TESTB_LIBRARY})
-set_target_properties(plugin_test PROPERTIES BUILD_RPATH "${PLUGIN_DIR}")
+# 链接到测试程序（只链接自己的库）
+target_link_libraries(plugin_test PRIVATE pluginA)
 
 # 打印最终配置
-message(STATUS "链接库: ${TESTB_LIBRARY}")
-message(STATUS "运行时路径: ${PLUGIN_DIR}")
+message(STATUS "构建完成: pluginA 动态库和 plugin_test 测试程序")
 message(STATUS "===============")
