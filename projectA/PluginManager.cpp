@@ -3,18 +3,52 @@
 PluginManager::PluginManager() : factory_(nullptr), initialized_(false) {
 }
 
+PluginManager::~PluginManager() {
+    // 卸载所有已加载的动态库
+    for (void* handle : loadedLibraries_) {
+        if (handle) {
+            dlclose(handle);
+        }
+    }
+    loadedLibraries_.clear();
+}
+
 bool PluginManager::initialize() {
-    std::cout << "=== 动态插件加载测试（CMake链接方案） ===" << std::endl;
+    std::cout << "=== 动态插件加载测试（动态加载方案） ===" << std::endl;
     
-    // 直接使用ClassFactory单例，通过链接的动态库自动初始化
+    // 获取ClassFactory单例
     factory_ = &ClassFactory::getInstance();
     if (!factory_) {
         std::cerr << "❌ 获取ClassFactory实例失败" << std::endl;
         return false;
     }
     
-    std::cout << "✅ 成功获取ClassFactory实例（通过CMake链接）" << std::endl;
+    std::cout << "✅ 成功获取ClassFactory实例" << std::endl;
     initialized_ = true;
+    return true;
+}
+
+bool PluginManager::loadPluginLibrary(const std::string& libraryPath) {
+    if (!initialized_) {
+        std::cerr << "❌ PluginManager未初始化" << std::endl;
+        return false;
+    }
+
+    std::cout << "🔄 正在加载插件库: " << libraryPath << std::endl;
+
+    // 使用dlopen加载动态库
+    void* handle = dlopen(libraryPath.c_str(), RTLD_LAZY | RTLD_GLOBAL);
+    if (!handle) {
+        std::cerr << "❌ 加载动态库失败: " << dlerror() << std::endl;
+        return false;
+    }
+
+    // 保存句柄
+    loadedLibraries_.push_back(handle);
+    
+    std::cout << "✅ 成功加载插件库: " << libraryPath << std::endl;
+    std::cout << "📋 当前已注册插件数量: " << factory_->getRegisteredCount() << std::endl;
+    
     return true;
 }
 

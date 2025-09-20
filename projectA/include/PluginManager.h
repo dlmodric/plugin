@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <dlfcn.h>  // Linux动态库加载
 #include "IPlugin.h"
 #include "class_factory.h"
 #include "params.h"  // 添加NodeConfig的头文件
@@ -14,13 +15,20 @@
 class PluginManager {
 public:
     PluginManager();
-    ~PluginManager() = default;
+    ~PluginManager();
 
     /**
      * 初始化插件管理器
      * @return 是否初始化成功
      */
     bool initialize();
+
+    /**
+     * 动态加载插件库
+     * @param libraryPath 插件库路径
+     * @return 是否加载成功
+     */
+    bool loadPluginLibrary(const std::string& libraryPath);
 
     /**
      * 执行指定的插件
@@ -77,4 +85,5 @@ public:
 private:
     ClassFactory* factory_;
     bool initialized_;
+    std::vector<void*> loadedLibraries_;  // 存储已加载的动态库句柄
 };

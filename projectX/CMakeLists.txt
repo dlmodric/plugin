@@ -6,7 +6,6 @@ set(PROJECT_VERSION "1.0.0")
 set(PROJECT_AUTHOR "DenisYang")
 set(BUILD_TYPE "Release")
 set(PLUGIN_A_DIR "../projectA/build")
-set(PLUGIN_B_DIR "../projectB/build")
 set(INCLUDE_DIR "include")
 
 # 打印变量值
@@ -16,7 +15,6 @@ message(STATUS "项目版本: ${PROJECT_VERSION}")
 message(STATUS "项目作者: ${PROJECT_AUTHOR}")
 message(STATUS "构建类型: ${BUILD_TYPE}")
 message(STATUS "插件A目录: ${PLUGIN_A_DIR}")
-message(STATUS "插件B目录: ${PLUGIN_B_DIR}")
 message(STATUS "头文件目录: ${INCLUDE_DIR}")
 message(STATUS "CMake版本: ${CMAKE_VERSION}")
 message(STATUS "编译器: ${CMAKE_CXX_COMPILER}")
@@ -61,14 +59,10 @@ message(STATUS "头文件目录: ${INCLUDE_DIR}")
 find_library(PLUGIN_A_LIBRARY pluginA PATHS ${PLUGIN_A_DIR} NO_DEFAULT_PATH REQUIRED)
 message(STATUS "找到pluginA动态库: ${PLUGIN_A_LIBRARY}")
 
-# 查找并链接projectB动态库
-find_library(PLUGIN_B_LIBRARY testB PATHS ${PLUGIN_B_DIR} NO_DEFAULT_PATH REQUIRED)
-message(STATUS "找到testB动态库: ${PLUGIN_B_LIBRARY}")
-
-target_link_libraries(projectX PRIVATE ${PLUGIN_A_LIBRARY} ${PLUGIN_B_LIBRARY})
-set_target_properties(projectX PROPERTIES BUILD_RPATH "${PLUGIN_A_DIR}:${PLUGIN_B_DIR}")
+target_link_libraries(projectX PRIVATE ${PLUGIN_A_LIBRARY})
+set_target_properties(projectX PROPERTIES BUILD_RPATH "${PLUGIN_A_DIR}")
 
 # 打印最终配置
-message(STATUS "链接库: ${PLUGIN_A_LIBRARY}, ${PLUGIN_B_LIBRARY}")
-message(STATUS "运行时路径: ${PLUGIN_A_DIR}:${PLUGIN_B_DIR}")
+message(STATUS "链接库: ${PLUGIN_A_LIBRARY}")
+message(STATUS "运行时路径: ${PLUGIN_A_DIR}")
 message(STATUS "===============")

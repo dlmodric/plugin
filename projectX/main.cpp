@@ -17,6 +17,17 @@ int main()
     
     std::cout << "✅ ProjectX 成功初始化 PluginManager" << std::endl;
     
+    // X项目告知A项目B.so的路径，让A动态加载B.so
+    std::string pluginBPath = "/Users/denisyang/lyl/plugin/projectB/build/libtestB.dylib";
+    std::cout << "\n🔄 ProjectX 告知 PluginManager 加载插件库: " << pluginBPath << std::endl;
+    
+    if (!manager.loadPluginLibrary(pluginBPath)) {
+        std::cerr << "❌ 加载插件库失败: " << pluginBPath << std::endl;
+        return 1;
+    }
+    
+    std::cout << "✅ ProjectX 成功通过 PluginManager 加载了插件库" << std::endl;
+    
     // 打印插件状态信息
     manager.printStatus();
     
