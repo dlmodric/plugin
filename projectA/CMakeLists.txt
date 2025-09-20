@@ -39,7 +39,7 @@ target_include_directories(pluginA PRIVATE ${INCLUDE_DIR})
 target_include_directories(pluginA PUBLIC ${INCLUDE_DIR})
 
 # 链接动态库加载所需的库
-target_link_libraries(pluginA PRIVATE ${CMAKE_DL_LIBS})
+# target_link_libraries(pluginA PRIVATE ${CMAKE_DL_LIBS})
 
 # Linux特定的链接器标志，确保静态初始化对象不被优化掉
 if(UNIX AND NOT APPLE)
